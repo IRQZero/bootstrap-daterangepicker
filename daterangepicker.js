@@ -517,9 +517,13 @@
         },
 
         updateFormInputs: function () {
-            this.container.find('input[name=daterangepicker_start]').val(this.startDate.format(this.format));
-            this.container.find('input[name=daterangepicker_end]').val(this.endDate.format(this.format));
-
+            if(this.useCustomRangeInputs) {
+                $('input[name=daterangepicker_start]').val(this.startDate.format(this.format));
+                $('input[name=daterangepicker_end]').val(this.endDate.format(this.format));
+            } else {
+                this.container.find('input[name=daterangepicker_start]').val(this.startDate.format(this.format));
+                this.container.find('input[name=daterangepicker_end]').val(this.endDate.format(this.format));
+            }
             if (this.startDate.isSame(this.endDate) || this.startDate.isBefore(this.endDate)) {
                 this.container.find('button.applyBtn').removeAttr('disabled');
             } else {
