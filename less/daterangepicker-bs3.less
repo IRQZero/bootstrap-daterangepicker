@@ -7,15 +7,24 @@
  * Built for http://www.improvely.com
  */
 
-@calendar-cells-min-width: 29px;  // 32px
-@calendar-cells-padding: 1px;     // 5px;
-@calendar-week-font-size: 60%;     // 80%
-@calendar-day-font-size: small;     // medium
-@select-font-size: 10px;          // 12px
+@calendar-cells-min-width: 29px;      // 32px
+@calendar-cells-padding: 1px;         // 5px;
+@calendar-week-font-size: 60%;        // 80%
+@calendar-day-font-size: small;       // medium
+@calendar-z-index: 1031;              // 3000
+@select-font-size: 10px;              // 12px
+@calendar-box-shadow: none;           // 0 6px 12px rgba(0, 0, 0, 0.175)
+@calendar-day-bg-color: #5aa855;      // #357ebd
+@calendar-selected-day-color: #000;   // browser defaults
+@calendar-selected-day-hover: lighten(@calendar-selected-day-color, 10%);
+
+
 
 .daterangepicker.dropdown-menu {
+  margin: 0 auto;
   max-width: none;
-  z-index: 3000;
+  z-index: @calendar-z-index;
+  box-shadow: none;
 }
 
 .daterangepicker.opensleft .ranges, .daterangepicker.opensleft .calendar {
@@ -26,6 +35,11 @@
 .daterangepicker.opensright .ranges, .daterangepicker.opensright .calendar,
 .daterangepicker.openscenter .ranges, .daterangepicker.openscenter .calendar {
   float: right;
+  margin: 4px;
+}
+.daterangepicker.opensalways .ranges, .daterangepicker.opensalways .calendar,
+.daterangepicker.opensalways .ranges, .daterangepicker.opensalways .calendar {
+  float: left;
   margin: 4px;
 }
 
@@ -226,6 +240,13 @@
   content: '';
 }
 
+.daterangepicker.opensalways,
+.daterangepicker.opensalways:before,
+.daterangepicker.opensalways:after {
+  position: absolute;
+  display: inline-block;
+}
+
 .daterangepicker.dropup{
   margin-top: -5px;
 }
@@ -267,14 +288,16 @@
 }
 
 .daterangepicker td.available:hover, .daterangepicker th.available:hover {
-  background: #eee;
+  background: lighten(@calendar-day-bg-color, 15%);
+  color: @calendar-selected-day-hover;
 }
 
 .daterangepicker td.in-range {
-  background: #ebf4f8;
+  background: lighten(@calendar-day-bg-color, 40%);
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
+  color: @calendar-selected-day-color;
 }
 
 .daterangepicker td.start-date {
@@ -296,9 +319,9 @@
 }
 
 .daterangepicker td.active, .daterangepicker td.active:hover {
-  background-color: #357ebd;
-  border-color: #3071a9;
-  color: #fff;
+  background-color: @calendar-day-bg-color;
+  border-color: darken(@calendar-day-bg-color, 30%);
+  color: @calendar-selected-day-color;
 }
 
 .daterangepicker td.week, .daterangepicker th.week {

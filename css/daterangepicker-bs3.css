@@ -7,8 +7,10 @@
  * Built for http://www.improvely.com
  */
 .daterangepicker.dropdown-menu {
+  margin: 0 auto;
   max-width: none;
-  z-index: 3000;
+  z-index: 1031;
+  box-shadow: none;
 }
 .daterangepicker.opensleft .ranges,
 .daterangepicker.opensleft .calendar {
@@ -20,6 +22,13 @@
 .daterangepicker.openscenter .ranges,
 .daterangepicker.openscenter .calendar {
   float: right;
+  margin: 4px;
+}
+.daterangepicker.opensalways .ranges,
+.daterangepicker.opensalways .calendar,
+.daterangepicker.opensalways .ranges,
+.daterangepicker.opensalways .calendar {
+  float: left;
   margin: 4px;
 }
 .daterangepicker.single .ranges,
@@ -199,6 +208,12 @@
   border-left: 6px solid transparent;
   content: '';
 }
+.daterangepicker.opensalways,
+.daterangepicker.opensalways:before,
+.daterangepicker.opensalways:after {
+  position: absolute;
+  display: inline-block;
+}
 .daterangepicker.dropup {
   margin-top: -5px;
 }
@@ -238,13 +253,15 @@
 }
 .daterangepicker td.available:hover,
 .daterangepicker th.available:hover {
-  background: #eee;
+  background: #8bc287;
+  color: #1a1a1a;
 }
 .daterangepicker td.in-range {
-  background: #ebf4f8;
+  background: #ddeddc;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
+  color: #000000;
 }
 .daterangepicker td.start-date {
   -webkit-border-radius: 4px 0 0 4px;
@@ -263,9 +280,9 @@
 }
 .daterangepicker td.active,
 .daterangepicker td.active:hover {
-  background-color: #357ebd;
-  border-color: #3071a9;
-  color: #fff;
+  background-color: #5aa855;
+  border-color: #244222;
+  color: #000000;
 }
 .daterangepicker td.week,
 .daterangepicker th.week {

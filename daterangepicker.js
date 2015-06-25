@@ -69,7 +69,9 @@
         if (typeof options !== 'object' || options === null)
             options = {};
 
-        this.parentEl = (typeof options === 'object' && options.parentEl && $(options.parentEl).length) ? $(options.parentEl) : $(this.parentEl);
+        var parent = (typeof options === 'object' && options.parentEl && $(options.parentEl).length) ? $(options.parentEl) : $(this.parentEl);
+        if(options.alwaysShowing && this.parentEl === 'body') { parent = this.element; }
+        this.parentEl = parent;
         this.container = $(DRPTemplate).appendTo(this.parentEl);
 
         this.setOptions(options, cb);
@@ -85,17 +87,29 @@
             .on('change.daterangepicker', 'select.monthselect', $.proxy(this.updateMonthYear, this))
             .on('change.daterangepicker', 'select.hourselect,select.minuteselect,select.secondselect,select.ampmselect', $.proxy(this.updateTime, this));
 
-        this.container.find('.ranges')
-            .on('click.daterangepicker', 'button.applyBtn', $.proxy(this.clickApply, this))
-            .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this))
-            .on('click.daterangepicker', '.daterangepicker_start_input,.daterangepicker_end_input', $.proxy(this.showCalendars, this))
-            .on('change.daterangepicker', '.daterangepicker_start_input,.daterangepicker_end_input', $.proxy(this.inputsChanged, this))
-            .on('keydown.daterangepicker', '.daterangepicker_start_input,.daterangepicker_end_input', $.proxy(this.inputsKeydown, this))
-            .on('click.daterangepicker', 'li', $.proxy(this.clickRange, this))
-            .on('mouseenter.daterangepicker', 'li', $.proxy(this.enterRange, this))
-            .on('mouseleave.daterangepicker', 'li', $.proxy(this.updateFormInputs, this));
+        if(!this.useCustomRangeInputs) {
+            this.container.find('.ranges')
+                .on('click.daterangepicker', 'button.applyBtn', $.proxy(this.clickApply, this))
+                .on('click.daterangepicker', 'button.cancelBtn', $.proxy(this.clickCancel, this))
+                .on('click.daterangepicker', '.daterangepicker_start_input,.daterangepicker_end_input', $.proxy(this.showCalendars, this))
+                .on('change.daterangepicker', '.daterangepicker_start_input,.daterangepicker_end_input', $.proxy(this.inputsChanged, this))
+                .on('keydown.daterangepicker', '.daterangepicker_start_input,.daterangepicker_end_input', $.proxy(this.inputsKeydown, this))
+                .on('click.daterangepicker', 'li', $.proxy(this.clickRange, this))
+                .on('mouseenter.daterangepicker', 'li', $.proxy(this.enterRange, this))
+                .on('mouseleave.daterangepicker', 'li', $.proxy(this.updateFormInputs, this));
+        } else {
+            $('.daterangepicker_start_input,.daterangepicker_end_input')
+                .on('change.daterangepicker', $.proxy(this.inputsChanged, this))
+                .on('keydown.daterangepicker', $.proxy(this.inputsKeydown, this))
+                .on('keyup.daterangepicker', $.proxy(this.updateFromControl, this))
+                .on('keydown.daterangerpicker', $.proxy(this.keydown, this))
+            this.container
+                .on('click.daterangepicker', 'li', $.proxy(this.clickRange, this))
+                .on('mouseenter.daterangepicker', 'li', $.proxy(this.enterRange, this))
+                .on('mouseleave.daterangepicker', 'li', $.proxy(this.updateFormInputs, this));
+        }
 
-        if (this.element.is('input')) {
+        if (this.element.is('input') && !this.useCustomRangeInputs) {
             this.element.on({
                 'click.daterangepicker': $.proxy(this.show, this),
                 'focus.daterangepicker': $.proxy(this.show, this),
@@ -247,6 +261,7 @@
 
             if(typeof options.alwaysShowing === 'boolean') {
                 this.alwaysShowing = options.alwaysShowing;
+                this.opens = "always";
             } else {
                 if (typeof options.opens === 'string') {
                     this.opens = options.opens;
@@ -449,7 +464,11 @@
             }
             
             if(this.useCustomRangeInputs) {
-                $("#range_inputs").hide();
+                if(this.alwaysShowing) {
+                    this.container.find(".ranges").hide();
+                } else {
+                    this.container.find("#range_inputs").hide();
+                }
             }
 
             if (typeof options.ranges === 'undefined' && !this.singleDatePicker) {
@@ -618,6 +637,12 @@
                         left: 9
                     });
                 }
+            } else if(this.alwaysShowing) {
+                this.container.css({
+                    position: 'relative',
+                    top: "0px",
+                    left: "0px"
+                });
             } else {
                 this.container.css({
                     top: containerTop,
