@@ -138,6 +138,7 @@
             this.minDate = false;
             this.maxDate = false;
             this.dateLimit = false;
+            this.minRange = false;
 
             this.showDropdowns = false;
             this.showWeekNumbers = false;
@@ -217,6 +218,9 @@
 
             if (typeof options.dateLimit === 'object')
                 this.dateLimit = options.dateLimit;
+
+            if (typeof options.minRange === 'object')
+                this.minRange = options.minRange;
 
             if (typeof options.locale === 'object') {
 
@@ -888,6 +892,11 @@
                     }
                 }
             }
+            
+            if (moment( startDate ).isSame( moment(endDate), 'days' )
+                && typeof this.minRange === 'object') {
+                endDate = moment(startDate).add(this.minRange, 'days');
+            }
 
             if (this.singleDatePicker && cal.hasClass('left')) {
                 endDate = startDate.clone();
@@ -1033,6 +1042,10 @@
             if (customRange) {
                 this.chosenLabel = this.container.find('.ranges li:last').addClass('active').html();
                 this.showCalendars();
+            }
+
+            if(this.useCustomRangeInputs) {
+                this.notify();
             }
         },
 
